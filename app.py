@@ -8,6 +8,9 @@ import fitz  # PyMuPDF
 import zipfile
 from werkzeug.utils import secure_filename
 import tempfile
+import wordcloud
+import jieba
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -31,6 +34,9 @@ def text_recognition():
 def pdf_image_extraction():
     return render_template('pdf_image_extraction.html')
 
+@app.route('/wordcloud-generation')
+def wordcloud_generation():
+    return render_template('wordcloud_generation.html')
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -162,6 +168,48 @@ def download_file(filename):
     temp_file.close()
 
     return send_file(temp_file.name, as_attachment=True, download_name=filename)
+
+@app.route('/upload-txt', methods=['POST'])
+def upload_txt():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'})
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'})
+
+    if file and file.filename.lower().endswith('.txt'):
+        filename = secure_filename(file.filename)
+        txt_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(txt_path)
+        return generate_wordcloud(txt_path)
+    return jsonify({'error': 'File type not supported'})
+
+
+def generate_wordcloud(txt_path):
+    with open(txt_path, 'r', encoding='utf-8') as f:
+        text = f.read()
+
+    # 分词
+    words = jieba.lcut(text)
+    txt = " ".join(words)
+
+    # 生成词云
+    wc = wordcloud.WordCloud(
+        width=1920, height=1080,
+        background_color="white",
+        font_path="msyh.ttc"
+    )
+    wc.generate(txt)
+    wordcloud_path = os.path.join(app.config['UPLOAD_FOLDER'], 'wordcloud.png')
+    wc.to_file(wordcloud_path)
+
+    # 删除上传的 txt 文件
+    os.remove(txt_path)
+
+    return jsonify({'wordcloud_url': url_for('uploaded_file', filename='wordcloud.png'),
+                    'download_url': url_for('download_file', filename='wordcloud.png')})
+
 
 
 if __name__ == '__main__':

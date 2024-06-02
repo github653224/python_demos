@@ -1,6 +1,8 @@
 easyocr==1.7.1
 fitz==0.0.1.dev2
 Flask==3.0.3
+jieba==0.42.1
 numpy==1.26.4
 Pillow==10.3.0
 Werkzeug==3.0.3
+wordcloud==1.9.3
