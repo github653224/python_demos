@@ -1,0 +1,8 @@
+*.pyc  
+__pycache__/
+database.db  
+logs/
+temp/*/
+.idea/
+.idea
+

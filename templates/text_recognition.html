@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文本识别</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">文本识别</h1>
+        <form id="upload-form" enctype="multipart/form-data" class="text-center">
+            <div class="form-group">
+                <input type="file" id="file-input" name="file" class="form-control-file" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-primary">上传并识别</button>
+        </form>
+        <div id="loading" class="text-center mt-4" style="display:none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">处理中...</span>
+            </div>
+            <p>正在处理，请稍候...</p>
+        </div>
+        <div id="result" class="mt-4" style="display:none;">
+            <h2 class="text-center">识别结果</h2>
+            <pre id="output" class="bg-light p-3"></pre>
+            <div class="text-center">
+                <a id="download-link" href="#" class="btn btn-success" style="display:none;">下载识别结果</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/static/js/text_recognition.js"></script>
+</body>
+</html>
